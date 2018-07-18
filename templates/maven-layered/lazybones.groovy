@@ -1,5 +1,8 @@
-import uk.co.cacoethes.util.NameType
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.filefilter.NameFileFilter
+import org.apache.commons.io.filefilter.WildcardFileFilter
+import org.apache.commons.io.filefilter.TrueFileFilter
+import uk.co.cacoethes.util.NameType
 
 def props = [:]
 
@@ -20,42 +23,14 @@ props.version = ask("Define value for 'version' [0.0.1-SNAPSHOT]: ", "0.0.1-SNAP
 
 props.base_package = props.group + "." + transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.PROPERTY).toLowerCase()
 
-println "project class: " + props.project_class_name
-println "base package: " + props.base_package
-println "project name: " + props.project_name
-println "artifact id: " + props.project_name
-println "group: " + props.group
-println "version: " + props.version
+//println "project class: " + props.project_class_name
+//println "base package: " + props.base_package
+//println "project name: " + props.project_name
+//println "artifact id: " + props.project_name
+//println "group: " + props.group
+//println "version: " + props.version
 
-// To add other options, copy from external dir or delete directories we don't need
-// i.e. If have UI for flex, JS/JQUery, or gwt
-// Have all 3 directories: ui-flex, ui-jquery, ui-gwt.  Delete all but 1.
-
-def addLombok = true
-def addAop = true
-def addSpringBoot = true
-def addSpringSecurity = true
-def addGitNameAndIgnore = true
-
-def projectName = projectDir.getName()
-
-props.projectName = projectName
-
-processTemplates "build.gradle", props
-
-processTemplates "pom.xml", props
-processTemplates "api/pom.xml", props
-processTemplates "api-impl/pom.xml", props
-processTemplates "database/pom.xml", props
-processTemplates "portal/pom.xml", props
-processTemplates "service/pom.xml", props
-processTemplates "test/pom.xml", props
-processTemplates "ui/pom.xml", props
-processTemplates "util/pom.xml", props
-
-processTemplates "service/src/main/java/Application.java", props
-processTemplates "service/src/main/java/HelloWorldController.java", props
-processTemplates "api/src/main/java/HelloWorld.java", props
+/* Common functions */
 
 def renameFile = { File from, String path ->
     if (from.file) {
@@ -69,31 +44,90 @@ def packageToPath = { String path ->
     return path.replace(".", '/')
 }
 
-println "package path : " + packageToPath(props.base_package)
-def servicePath = projectDir.getName() + "/service/src/main/java/" + packageToPath(props.base_package) + "/service"
-println "service path : " + servicePath
+def determinePackageFromJavaFile = { File javaFile ->
+    String returnValue = FileUtils.readFileToString(javaFile).findAll(/package\s*(\S+)\s*;/) { full, pack ->
+        pack
+    }
 
-def serviceStartupFile = new File(projectDir.getName() + "/service/src/main/java/Application.java")
+    // For some reason this groovy code is returning these values in brackets
+    returnValue = returnValue.substring(1, returnValue.length() - 1)
 
-renameFile(serviceStartupFile, servicePath + "/" + props.project_class_name + "Application.java")
+    return returnValue
+}
 
-println "package path : " + packageToPath(props.base_package)
-def controllerPath = projectDir.getName() + "/service/src/main/java/" + packageToPath(props.base_package) + "/controller"
-println "controller path : " + servicePath
+def determineClassNameFromJavaFile = { File javaFile ->
+    String returnValue = FileUtils.readFileToString(javaFile).findAll(/public\s*class\s*(\S+)\s*\{/) { full, cla ->
+        return cla
+    }
 
-def controllerFile = new File(projectDir.getName() + "/service/src/main/java/HelloWorldController.java")
+    // For some reason this groovy code is returning these values in brackets
+    returnValue = returnValue.substring(1, returnValue.length() - 1)
 
-renameFile(controllerFile, controllerPath + "/HelloWorldController.java")
+    return returnValue
+}
 
-println "package path : " + packageToPath(props.base_package)
-def domainPath = projectDir.getName() + "/api/src/main/java/" + packageToPath(props.base_package) + "/domain"
-println "domain path : " + domainPath
+// To add other options, copy from external dir or delete directories we don't need
+// i.e. If have UI for flex, JS/JQUery, or gwt
+// Have all 3 directories: ui-flex, ui-jquery, ui-gwt.  Delete all but 1.
 
-def domainFile = new File(projectDir.getName() + "/api/src/main/java/HelloWorld.java")
+def addLombok = true
+def addAop = true
+def addSpringBoot = true
+def addSpringSecurity = true
+def addGitNameAndIgnore = true
 
-renameFile(domainFile, domainPath + "/HelloWorld.java")
+def projectName = projectDir.getName()
+props.projectName = projectDir.getName()
 
+// Handle all Java files.
+def javaFiles = FileUtils.listFiles(projectDir, new WildcardFileFilter("*.java"), TrueFileFilter.INSTANCE)
+javaFiles.each {
+    File thisFile = it
+    String thisFileDir = thisFile.getParent()
 
+//    println "root file path " + projectDir
+//    println "this file path " + thisFile
+
+    File relativeFilePath = projectDir.toPath().relativize(thisFile.toPath()).toFile()
+
+//    println "Relative path for this java file : " + relativeFilePath.getPath()
+
+    processTemplates relativeFilePath.getPath(), props
+
+    String pack = determinePackageFromJavaFile(thisFile)
+    String className = determineClassNameFromJavaFile(thisFile)
+
+//    println "pack : " + pack
+//    println "class : " + className
+
+    directoryPath = thisFile.getParent()
+
+//    println "new package : $pack"
+//    println "new class : $className"
+//    println "Directory : $directoryPath"
+
+    String newAbsolutePath = thisFileDir + "/" + packageToPath(pack) + "/" + className + ".java"
+//    println "Copying file to path " + newAbsolutePath
+
+    renameFile(thisFile, newAbsolutePath)
+}
+
+// Handle all pom.xml files.
+def pomFiles = FileUtils.listFiles(projectDir, new NameFileFilter("pom.xml"), TrueFileFilter.INSTANCE)
+pomFiles.each {
+//    println "Found pom : ${it}"
+
+    File thisFile = it
+
+    File relativeFilePath = projectDir.toPath().relativize(thisFile.toPath()).toFile()
+
+//    println "relative path : ${relativeFilePath}"
+
+    processTemplates relativeFilePath.getPath(), props
+}
+
+// Rename all directories to put the project name in front of them
+// e.g. api becomes my-project-api
 def pre = projectName + "-"
 projectDir.eachDir { d ->
     def name = d.getName()
