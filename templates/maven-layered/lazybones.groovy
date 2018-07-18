@@ -54,6 +54,8 @@ processTemplates "ui/pom.xml", props
 processTemplates "util/pom.xml", props
 
 processTemplates "service/src/main/java/Application.java", props
+processTemplates "service/src/main/java/HelloWorldController.java", props
+processTemplates "api/src/main/java/HelloWorld.java", props
 
 def renameFile = { File from, String path ->
     if (from.file) {
@@ -73,9 +75,24 @@ println "service path : " + servicePath
 
 def serviceStartupFile = new File(projectDir.getName() + "/service/src/main/java/Application.java")
 
-println "isFile : " + serviceStartupFile.isFile()
-
 renameFile(serviceStartupFile, servicePath + "/" + props.project_class_name + "Application.java")
+
+println "package path : " + packageToPath(props.base_package)
+def controllerPath = projectDir.getName() + "/service/src/main/java/" + packageToPath(props.base_package) + "/controller"
+println "controller path : " + servicePath
+
+def controllerFile = new File(projectDir.getName() + "/service/src/main/java/HelloWorldController.java")
+
+renameFile(controllerFile, controllerPath + "/HelloWorldController.java")
+
+println "package path : " + packageToPath(props.base_package)
+def domainPath = projectDir.getName() + "/api/src/main/java/" + packageToPath(props.base_package) + "/domain"
+println "domain path : " + domainPath
+
+def domainFile = new File(projectDir.getName() + "/api/src/main/java/HelloWorld.java")
+
+renameFile(domainFile, domainPath + "/HelloWorld.java")
+
 
 def pre = projectName + "-"
 projectDir.eachDir { d ->
