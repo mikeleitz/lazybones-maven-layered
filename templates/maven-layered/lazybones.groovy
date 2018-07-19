@@ -1,9 +1,11 @@
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.NameFileFilter
-import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
+import org.apache.commons.io.filefilter.WildcardFileFilter
 import uk.co.cacoethes.util.NameType
+import java.util.logging.Level
 
+def logger = getLog()
 def props = [:]
 
 if (projectDir.name =~ /\-/) {
@@ -21,14 +23,18 @@ props.project_name = transformText(props.project_class_name, from: NameType.CAME
 props.group = ask("Define value for 'group' [com.mikeleitz]: ", "com.mikeleitz", "group")
 props.version = ask("Define value for 'version' [0.0.1-SNAPSHOT]: ", "0.0.1-SNAPSHOT", "version")
 
+props.useLombok = ask("Use Lombok for concise code [true]: ", "true", "useLombok")
+
+props.useLombok = "true".equalsIgnoreCase(props.useLombok.trim()) ? true : false
+
 props.base_package = props.group + "." + transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.PROPERTY).toLowerCase()
 
-//println "project class: " + props.project_class_name
-//println "base package: " + props.base_package
-//println "project name: " + props.project_name
-//println "artifact id: " + props.project_name
-//println "group: " + props.group
-//println "version: " + props.version
+logger.log(Level.FINE, "project class: " + props.project_class_name)
+logger.log(Level.FINE, "base package: " + props.base_package)
+logger.log(Level.FINE, "project name: " + props.project_name)
+logger.log(Level.FINE, "artifact id: " + props.project_name)
+logger.log(Level.FINE, "group: " + props.group)
+logger.log(Level.FINE, "version: " + props.version)
 
 /* Common functions */
 
@@ -70,7 +76,6 @@ def determineClassNameFromJavaFile = { File javaFile ->
 // i.e. If have UI for flex, JS/JQUery, or gwt
 // Have all 3 directories: ui-flex, ui-jquery, ui-gwt.  Delete all but 1.
 
-def addLombok = true
 def addAop = true
 def addSpringBoot = true
 def addSpringSecurity = true
@@ -85,29 +90,29 @@ javaFiles.each {
     File thisFile = it
     String thisFileDir = thisFile.getParent()
 
-//    println "root file path " + projectDir
-//    println "this file path " + thisFile
+    logger.log(Level.FINE, "root file path " + projectDir)
+    logger.log(Level.FINE, "this file path " + thisFile)
 
     File relativeFilePath = projectDir.toPath().relativize(thisFile.toPath()).toFile()
 
-//    println "Relative path for this java file : " + relativeFilePath.getPath()
+    logger.log(Level.FINE, "Relative path for this java file : " + relativeFilePath.getPath())
 
     processTemplates relativeFilePath.getPath(), props
 
     String pack = determinePackageFromJavaFile(thisFile)
     String className = determineClassNameFromJavaFile(thisFile)
 
-//    println "pack : " + pack
-//    println "class : " + className
+    logger.log(Level.FINE, "pack : " + pack)
+    logger.log(Level.FINE, "class : " + className)
 
     directoryPath = thisFile.getParent()
 
-//    println "new package : $pack"
-//    println "new class : $className"
-//    println "Directory : $directoryPath"
+    logger.log(Level.FINE, "new package : $pack")
+    logger.log(Level.FINE, "new class : $className")
+    logger.log(Level.FINE, "Directory : $directoryPath")
 
     String newAbsolutePath = thisFileDir + "/" + packageToPath(pack) + "/" + className + ".java"
-//    println "Copying file to path " + newAbsolutePath
+    logger.log(Level.FINE, "Copying file to path " + newAbsolutePath)
 
     renameFile(thisFile, newAbsolutePath)
 }
@@ -115,13 +120,13 @@ javaFiles.each {
 // Handle all pom.xml files.
 def pomFiles = FileUtils.listFiles(projectDir, new NameFileFilter("pom.xml"), TrueFileFilter.INSTANCE)
 pomFiles.each {
-//    println "Found pom : ${it}"
+    logger.log(Level.FINE, "Found pom : ${it}")
 
     File thisFile = it
 
     File relativeFilePath = projectDir.toPath().relativize(thisFile.toPath()).toFile()
 
-//    println "relative path : ${relativeFilePath}"
+    logger.log(Level.FINE, "relative path : ${relativeFilePath}")
 
     processTemplates relativeFilePath.getPath(), props
 }

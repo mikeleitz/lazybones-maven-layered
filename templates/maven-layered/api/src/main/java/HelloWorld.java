@@ -1,13 +1,18 @@
 package ${base_package}.domain;
 
+<% if (useLombok) { %>import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@ToString(callSuper=true)<% } %>
 public class HelloWorld {
-
-    private final long id;
-    private final String content;
-
+    <% if (useLombok) { %>@Getter <% } %>private final long id;
+    <% if (useLombok) { %>@Getter <% } %>private final String content;
+<% if (!useLombok) { %>
     public HelloWorld(long id, String content) {
-        this.id = id;
-        this.content = content;
+            this.id = id;
+            this.content = content;
     }
 
     public long getId() {
@@ -16,5 +21,5 @@ public class HelloWorld {
 
     public String getContent() {
         return content;
-    }
+    }<% } %>
 }
