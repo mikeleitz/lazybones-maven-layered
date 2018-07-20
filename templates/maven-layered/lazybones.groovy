@@ -23,10 +23,6 @@ props.project_name = transformText(props.project_class_name, from: NameType.CAME
 props.group = ask("Define value for 'group' [com.mikeleitz]: ", "com.mikeleitz", "group")
 props.version = ask("Define value for 'version' [0.0.1-SNAPSHOT]: ", "0.0.1-SNAPSHOT", "version")
 
-props.useLombok = ask("Use Lombok for concise code [true]: ", "true", "useLombok")
-
-props.useLombok = "true".equalsIgnoreCase(props.useLombok.trim()) ? true : false
-
 props.base_package = props.group + "." + transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.PROPERTY).toLowerCase()
 
 logger.log(Level.FINE, "project class: " + props.project_class_name)
