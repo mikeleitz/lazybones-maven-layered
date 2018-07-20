@@ -1,6 +1,6 @@
 package ${base_package}.dao.domain;
 
-import ${base_package}.model.HelloWorld;
+import ${base_package}.model.AppUser;
 
 import lombok.*;
 
@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Data
 @ToString(callSuper=true)
 @Entity
-public class HelloWorldDomain {
+public class AppUserDomain {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -22,7 +22,7 @@ public class HelloWorldDomain {
 
     @Getter @Setter private String content;
 
-    public HelloWorld toModel() {
-        return new HelloWorld(this.getId(), this.getContent());
+    public AppUser toModel() {
+        return new AppUser(this.getId(), this.getContent());
     }
 }

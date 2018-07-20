@@ -5,7 +5,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper=true)
-public class HelloWorld {
+public class AppUser {
     @Getter @Setter private Long id;
     @Getter @Setter private String content;
 }
