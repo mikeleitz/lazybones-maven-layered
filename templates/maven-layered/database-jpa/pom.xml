@@ -9,8 +9,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>${projectName}-database</artifactId>
+    <artifactId>${projectName}-database-jpa</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>${group}</groupId>
+            <artifactId>${projectName}-api</artifactId>
+            <version>\${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

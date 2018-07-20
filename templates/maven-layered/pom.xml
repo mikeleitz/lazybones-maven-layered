@@ -13,7 +13,7 @@
     <modules>
         <module>${projectName}-test</module>
         <module>${projectName}-util</module>
-        <module>${projectName}-database</module>
+        <module>${projectName}-database-jpa</module>
         <module>${projectName}-api</module>
         <module>${projectName}-api-impl</module>
         <module>${projectName}-ui</module>
