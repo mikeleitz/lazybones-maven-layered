@@ -12,5 +12,15 @@
     <artifactId>${projectName}-api-impl</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>${group}</groupId>
+            <artifactId>${projectName}-api</artifactId>
+            <version>\${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>\${spring.version}</version>
+        </dependency>
     </dependencies>
 </project>

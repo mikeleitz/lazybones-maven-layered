@@ -27,6 +27,7 @@
 
         <lombok.version>1.18.0</lombok.version>
         <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
+        <spring.version>4.3.8.RELEASE</spring.version>
     </properties>
 
     <build>

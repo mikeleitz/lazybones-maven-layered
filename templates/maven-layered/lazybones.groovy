@@ -62,7 +62,7 @@ def determinePackageFromJavaFile = { File javaFile ->
 }
 
 def determineClassNameFromJavaFile = { File javaFile ->
-    String returnValue = FileUtils.readFileToString(javaFile).findAll(/public\s*class\s*(\S+)\s*\{/) { full, cla ->
+    String returnValue = FileUtils.readFileToString(javaFile).findAll(/public\s*(class|interface)\s*(\S+)\s*/) { full, identifier, cla ->
         return cla
     }
 
