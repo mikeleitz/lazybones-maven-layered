@@ -1,4 +1,4 @@
-package ${base_package}.domain;
+package ${base_package}.model;
 
 <% if (useLombok) { %>import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

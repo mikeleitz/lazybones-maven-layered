@@ -1,6 +1,6 @@
 package ${base_package}.service.impl;
 
-import ${base_package}.domain.HelloWorld;
+import ${base_package}.model.HelloWorld;
 import ${base_package}.service.HelloWorldService;
 
 import org.springframework.stereotype.Service;

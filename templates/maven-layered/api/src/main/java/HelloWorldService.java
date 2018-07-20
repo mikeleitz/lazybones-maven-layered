@@ -1,6 +1,6 @@
 package ${base_package}.service;
 
-import ${base_package}.domain.HelloWorld;
+import ${base_package}.model.HelloWorld;
 
 public interface HelloWorldService {
 

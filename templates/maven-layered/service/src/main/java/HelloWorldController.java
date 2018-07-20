@@ -1,6 +1,6 @@
 package ${base_package}.controller;
 
-import ${base_package}.domain.HelloWorld;
+import ${base_package}.model.HelloWorld;
 import ${base_package}.service.HelloWorldService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
