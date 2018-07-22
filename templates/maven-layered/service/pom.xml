@@ -58,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>${group}</groupId>
-            <artifactId>${projectName}-database</artifactId>
+            <artifactId>${projectName}-database-jpa</artifactId>
             <version>\${project.version}</version>
         </dependency>
         <dependency>
@@ -77,13 +77,16 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
             <version>\${spring-boot.version}</version>
         </dependency>
-<!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-            <version>\${spring-boot.version}</version>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
--->
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
