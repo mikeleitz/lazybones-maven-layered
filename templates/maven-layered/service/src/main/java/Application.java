@@ -30,6 +30,7 @@ public class ${project_class_name}Application {
         SpringApplication.run(${project_class_name}Application.class, args);
     }
 
+/*
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
@@ -44,6 +45,7 @@ public class ${project_class_name}Application {
 
         };
     }
+*/
 
     @Bean
     public CommandLineRunner demo(AppUserRepository repository) {

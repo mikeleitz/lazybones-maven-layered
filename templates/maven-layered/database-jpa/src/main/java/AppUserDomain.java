@@ -5,6 +5,7 @@ import ${base_package}.model.AppUser;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Data
 @ToString(callSuper=true)
+@Table(name="app_user")
 @Entity
 public class AppUserDomain {
 
