@@ -1,8 +1,10 @@
-package ${base_package}.dao.repository;
+package $ import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import org.springframework.data.repository.CrudRepository;
-import ${base_package}.dao.domain.AppUserDomain;
+{base_package}.dao.repository;
+        {base_package}.dao.domain.AppUserDomain;
 
+@Repository
 public interface AppUserRepository extends CrudRepository<AppUserDomain, Long> {
 
 }
