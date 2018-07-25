@@ -18,6 +18,7 @@
         <module>${projectName}-api-impl</module>
         <module>${projectName}-ui</module>
         <module>${projectName}-service</module>
+        <module>${projectName}-test-integration</module>
         <module>${projectName}-portal</module>
     </modules>
 
